@@ -1,0 +1,61 @@
+import { create } from 'zustand';
+import {  SubmissionDTO } from '../api';
+import { formApi } from '../apisTesting/testingApis';
+
+
+interface RequestStore {
+    selectedSubmission: SubmissionDTO | null;
+    isLoading: boolean;
+    error: string | null;
+    setSelectedSubmission: (form: SubmissionDTO) => void;
+    updateFormData: (formData: string) => void;
+    updateProcessDefenitionId: (processDefenitionId: number) => void;
+    submitForm: () => Promise<void>;
+    resetSubmission: () => void;
+  }
+  
+  export const useSubmissionStore = create<RequestStore>((set, get) => ({
+    selectedSubmission: null,
+    isLoading: false,
+    error: null,
+    
+    setSelectedSubmission: (submissionDTO: SubmissionDTO) => set({ selectedSubmission: submissionDTO }),
+    
+    updateFormData: (formData: string) => set((state) => ({
+      selectedSubmission: state.selectedSubmission ? 
+        { ...state.selectedSubmission, formData } : 
+        { formData } as SubmissionDTO
+    })),
+    
+    updateProcessDefenitionId: (processDefenitionId: number) => set((state) => ({
+      selectedSubmission: state.selectedSubmission ? 
+        { ...state.selectedSubmission, processDefenitionId } : 
+        { processDefenitionId } as SubmissionDTO
+    })),
+    
+    submitForm: async () => {
+      try {
+        set({ isLoading: true, error: null });
+        const { selectedSubmission } = get();
+        
+        if (!selectedSubmission) {
+          throw new Error("No form data to submit");
+        }
+        
+        await formApi.submitForm(selectedSubmission);
+        alert("Form submitted successfully!");
+        set({ selectedSubmission: null }); // Reset after submission
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        set({ error: "Failed to submit form. Please try again later." });
+        throw error; // Re-throw if you want to handle it in the component
+      } finally {
+        set({ isLoading: false });
+      }
+    },
+    
+    resetSubmission: () => set({ 
+      selectedSubmission: null,
+      error: null
+    })
+  }));

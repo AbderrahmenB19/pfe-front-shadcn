@@ -1,0 +1,49 @@
+.admin-form-builder {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+  }
+  
+  .toast-notification {
+    animation: slideIn 0.3s ease-out;
+    min-width: 300px;
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  .form-builder-container {
+    background-color: #fff;
+    min-height: 70vh;
+  }
+  
+  .card {
+    border-radius: 0.5rem;
+  }
+  
+  .toolbar {
+    min-height: 56px;
+  }
+  
+  /* Custom formio styles */
+  .formio-component-tabs {
+    margin-bottom: 1rem;
+  }
+  
+  .formio-component-tabs .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .formio-component-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    margin-bottom: -1px;
+  }
+  
+  .formio-component-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+  }

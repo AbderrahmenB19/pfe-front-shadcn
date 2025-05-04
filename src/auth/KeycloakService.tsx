@@ -1,0 +1,37 @@
+// src/KeycloakService.ts
+import Keycloak from 'keycloak-js';
+import { useAuthStore } from '../store/authStore';
+
+
+const keycloak = new Keycloak({
+  url: 'http://localhost:9090',
+  realm: 'pfe',
+  clientId: 'pfe-front-client',
+});
+
+const initKeycloak = () =>
+  new Promise<void>((resolve, reject) => {
+    keycloak
+      .init({ onLoad: 'login-required', pkceMethod: 'S256' })
+      .then((authenticated) => {
+        if (authenticated) {
+          localStorage.setItem('token', keycloak.token!);
+          console.log('token:', keycloak.token);
+          localStorage.setItem('refreshToken', keycloak.refreshToken!);
+
+          useAuthStore.getState().setToken(keycloak.token!); // Zustand
+          resolve();
+        } else {
+          reject("User not authenticated");
+        }
+      })
+      .catch((error) => reject(error));
+  });
+
+const doLogout = () => {
+  keycloak.logout();
+};
+
+const getKeycloakInstance = () => keycloak;
+
+export { initKeycloak, doLogout, getKeycloakInstance };
