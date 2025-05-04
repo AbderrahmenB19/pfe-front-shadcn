@@ -2,12 +2,13 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import {
   
   FormSchemaDTO,
-  ProcessDefinitionDTO,
+
   ProcessInstanceDTO,
   
   ReportDTO,
   SubmissionDTO
 } from '../api'; // Assuming you have these types exported from your OpenAPI definitions
+import { ProcessDefinitionDTO } from '@/types/process';
 
 // Create axios instance with base configuration
 const apiClient: AxiosInstance = axios.create({
@@ -86,6 +87,8 @@ export const processApi = {
    */
   getProcessDefinitions: (): Promise<AxiosResponse<Array<ProcessDefinitionDTO>>> => 
     apiClient.get('/processes/process-definition'),
+  getProcessDefinitionById: (id: number ): Promise<AxiosResponse<ProcessDefinitionDTO>> => 
+    apiClient.get(`/processes/process-definition/${id}`),
 
   /**
    * Get all reports for current user

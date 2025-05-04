@@ -8,6 +8,7 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 
 
+
 initKeycloak()
   .then(() => {
     createRoot(document.getElementById('root')!).render(

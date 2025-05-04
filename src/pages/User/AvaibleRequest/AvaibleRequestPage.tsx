@@ -1,4 +1,4 @@
-import { ProcessDefinitionDTO } from "@/api";
+
 import { processApi } from "@/apisTesting/testingApis";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSubmissionStore } from "@/store/requestStore";
@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import RequestCard from "@/components/ui/RequestCard";
+import { ProcessDefinitionDTO } from "@/types/process";
 
 const AvailableRequestPage = () => {
   const [requestList, setRequestList] = useState<ProcessDefinitionDTO[]>([]);

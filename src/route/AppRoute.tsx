@@ -5,10 +5,13 @@ import AdminFormBuilder from "../components/FormBuilder/FormBuilder";
 import FormTemplatesDashboard from "../components/FormBuilder/FormTemplate";
 import ValidatorDashboard from "../pages/validator/validationdashboard/validationPage";
 import ProcessDashboardPage from "../pages/controller/historique";
-import ProcessDefinition from "../pages/admin/ProcessDefinition/ProcessDefinition";
+
 import MyRequestPage from "../pages/User/MyRequest/MyRequestPage";
 import AvailableRequestPage from "@/pages/User/AvaibleRequest/AvaibleRequestPage";
 import { AppSidebar } from "./AppSidebar";
+import Dashboard from "@/pages/admin/ProcessDefinition/Dashboard";
+import ProcessBuilder from "@/pages/admin/ProcessDefinition/ProcessBuilder";
+
 
 
 const Header = () => (
@@ -34,7 +37,8 @@ const Layout = () => {
           <Routes>
             <Route path="/form-builder" element={<AdminFormBuilder />} />
             <Route path="/form-templates" element={<FormTemplatesDashboard />} />
-            <Route path="/process-definition" element={<ProcessDefinition />} />
+            <Route path="/process-definition" element={<Dashboard />} />
+            <Route path="/builder" element={<ProcessBuilder />} />
             <Route path="/validator" element={<ValidatorDashboard />} />
             <Route path="/form" element={<AvailableRequestPage />} />
             <Route path="/processes" element={<MyRequestPage />} />

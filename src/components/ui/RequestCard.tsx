@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProcessDefinitionDTO } from "@/api";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import SubmitForm from "../AddRequest/submitForm";
 import { useSubmissionStore } from "@/store/requestStore";
+import { ProcessDefinitionDTO } from "@/types/process";
 
 interface RequestCardProps {
   request: ProcessDefinitionDTO;
@@ -65,7 +66,7 @@ const RequestCard = ({ request, index }: RequestCardProps) => {
           
           
             <SubmitForm
-              formSchemaId={request.formId!}
+              formSchemaId={request.formTemplate?.id!}
               RequestName={request.name!}
               
               

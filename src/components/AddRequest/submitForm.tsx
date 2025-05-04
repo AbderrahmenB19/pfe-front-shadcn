@@ -24,6 +24,7 @@ const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
   useEffect(() => {
     const fetchFormSchema = async () => {
       try {
+        console.log("id")
         const response = await formApi.getFormSchema(formSchemaId)
         setJsonTemplate(response.data)
       } catch (err) {
