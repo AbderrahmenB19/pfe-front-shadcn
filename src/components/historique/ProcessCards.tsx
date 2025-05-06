@@ -31,7 +31,6 @@ import {
 import { CustomizedTimeline } from "../customizedTimeLine/customizedTimeline";
 import type { ReportDTO } from "../../api";
 import { RenderForm } from "../renderForm/renderForm";
-import { S } from "node_modules/framer-motion/dist/types.d-DDSxwf0n";
 import { formApi, processApi } from "@/apisTesting/testingApis";
 
 

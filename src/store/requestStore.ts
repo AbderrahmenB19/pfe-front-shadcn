@@ -43,7 +43,7 @@ interface RequestStore {
         }
         
         await formApi.submitForm(selectedSubmission);
-        alert("Form submitted successfully!");
+        
         set({ selectedSubmission: null }); // Reset after submission
       } catch (error) {
         console.error("Error submitting form:", error);

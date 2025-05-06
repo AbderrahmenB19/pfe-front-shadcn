@@ -1,61 +1,51 @@
+"use client"
 
-import { processApi } from "@/apisTesting/testingApis";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useSubmissionStore } from "@/store/requestStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Search } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Input } from "@/components/ui/input"
+import { processApi } from "@/apisTesting/testingApis"
+import { useSubmissionStore } from "@/store/requestStore"
+import type { ProcessDefinitionDTO } from "@/types/process"
+import RequestCard from "@/components/ui/RequestCard"
 
 
-import { motion } from "framer-motion";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import RequestCard from "@/components/ui/RequestCard";
-import { ProcessDefinitionDTO } from "@/types/process";
+export default function AvailableRequestPage() {
+  const [requestList, setRequestList] = useState<ProcessDefinitionDTO[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
 
-const AvailableRequestPage = () => {
-  const [requestList, setRequestList] = useState<ProcessDefinitionDTO[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedRequest, setSelectedRequest] = useState<ProcessDefinitionDTO | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const setSelectedSubmission = useSubmissionStore((state) => state.setSelectedSubmission);
+  const setSelectedSubmission = useSubmissionStore((state) => state.setSelectedSubmission)
 
   useEffect(() => {
-    setLoading(true);
-    setSelectedSubmission({ formData: undefined, processDefenitionId: undefined });
     const fetchRequests = async () => {
+      setLoading(true)
+      setSelectedSubmission({ formData: undefined, processDefenitionId: undefined })
+
       try {
-        const response = await processApi.getProcessDefinitions();
-        setRequestList(response.data);
+        const response = await processApi.getProcessDefinitions()
+        setRequestList(response.data)
       } catch (error: any) {
-        setError(error.message);
+        setError(error.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchRequests();
-  }, [setSelectedSubmission]);
+    }
 
-  const openDialog = (request: ProcessDefinitionDTO) => {
-    setSelectedRequest(request);
-    setIsDialogOpen(true);
-  };
+    fetchRequests()
+  }, [setSelectedSubmission])
 
-  const closeDialog = () => {
-    setSelectedRequest(null);
-    setIsDialogOpen(false);
-  };
-
-  const filteredRequests = requestList.filter(request => 
-    request.name!.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredRequests = requestList.filter((request) =>
+    request.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 pb-12">
       {/* Header */}
-      <motion.header 
-        className="bg-primary text-primary-foreground py-20 px-6 relative overflow-hidden"
+      <motion.header
+        className="bg-primary text-primary-foreground py-16 px-6 relative overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -74,9 +64,9 @@ const AvailableRequestPage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-background rounded-xl shadow-lg mb-8 p-4 flex gap-3 items-center mt-5"
+          className="bg-background rounded-xl shadow-lg mb-8 p-4 flex gap-3 items-center"
         >
-          <Search className="h-5 w-5 text-muted-foreground flex-shrink-0 " />
+          <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
           <Input
             type="text"
             placeholder="Search requests..."
@@ -95,17 +85,15 @@ const AvailableRequestPage = () => {
       >
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map(i => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="h-64 bg-muted animate-pulse rounded-lg"></div>
             ))}
           </div>
-        ) : error ? (<>
-          
-          <Alert variant="destructive" className="mb-6 animate-fade-in">
+        ) : error ? (
+          <Alert variant="destructive" className="mb-6">
             <AlertTitle>Error loading requests</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
-          </Alert></>
-       
+          </Alert>
         ) : filteredRequests.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold mb-2">No requests found</h2>
@@ -114,20 +102,11 @@ const AvailableRequestPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRequests.map((request, index) => (
-              <RequestCard
-                key={request.id}
-                request={request}
-                onSelect={openDialog}
-                index={index}
-              />
+              <RequestCard key={request.id} request={request} index={index} />
             ))}
           </div>
         )}
       </motion.div>
-
-    
     </div>
-  );
-};
-
-export default AvailableRequestPage;
+  )
+}

@@ -1,36 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { useSubmissionStore } from "@/store/requestStore"
+import { useDialogStateStore } from "@/store/DialogStateStore"
+import type { ProcessDefinitionDTO } from "@/types/process"
+import SubmitForm from "../AddRequest/submitForm"
 
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import {
-  Dialog,
-  
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  
-} from "@/components/ui/dialog";
-import SubmitForm from "../AddRequest/submitForm";
-import { useSubmissionStore } from "@/store/requestStore";
-import { ProcessDefinitionDTO } from "@/types/process";
 
 interface RequestCardProps {
-  request: ProcessDefinitionDTO;
-  onSelect: (request: ProcessDefinitionDTO) => void;
-  index: number;
+  request: ProcessDefinitionDTO
+  index: number
 }
 
-const RequestCard = ({ request, index }: RequestCardProps) => {
-  const [open, setOpen] = useState(false);
-  const updateProcessDefinitionId= useSubmissionStore((state) => state.updateProcessDefenitionId);
-  
+export default function RequestCard({ request, index }: RequestCardProps) {
+  const [open, setOpen] = useState(false)
+  const updateProcessDefinitionId = useSubmissionStore((state) => state.updateProcessDefenitionId)
+  const submissionDialog = useDialogStateStore((state) => state.submissionDialog)
+  const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
 
-  function handleOpen(request: ProcessDefinitionDTO): void {
-    updateProcessDefinitionId(request.id!);
-    setOpen(true);
+  function handleOpen() {
+    updateProcessDefinitionId(request.id!)
+    setOpen(true)
+    setSubmissionDialog(true)
   }
+
+  useEffect(() => {
+    if (submissionDialog === false && open === true) {
+      setOpen(false)
+    }
+  }, [submissionDialog, open])
 
   return (
     <>
@@ -44,13 +45,11 @@ const RequestCard = ({ request, index }: RequestCardProps) => {
           <div className="p-6 flex-grow">
             <div className="h-1.5 w-12 bg-primary mb-4 rounded-full" />
             <h2 className="text-xl font-bold mb-2 line-clamp-2">{request.name}</h2>
-            <p className="text-muted-foreground text-sm mb-4">
-              No description available
-            </p>
+            <p className="text-muted-foreground text-sm mb-4">No description available</p>
           </div>
           <div className="p-4 border-t border-border/50 bg-muted/30">
             <Button
-              onClick={() => handleOpen(request)}
+              onClick={handleOpen}
               variant="ghost"
               className="w-full justify-between group hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
@@ -61,22 +60,11 @@ const RequestCard = ({ request, index }: RequestCardProps) => {
         </Card>
       </motion.div>
 
-      <Dialog open={open} onOpenChange={setOpen} >
-        <DialogContent  className="sm:max-w-[600px]">
-          
-          
-            <SubmitForm
-              formSchemaId={request.formTemplate?.id!}
-              RequestName={request.name!}
-              
-              
-            />
-         
-          
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <SubmitForm formSchemaId={request.formTemplate?.id!} requestName={request.name!} />
         </DialogContent>
       </Dialog>
     </>
-  );
-};
-
-export default RequestCard;
+  )
+}

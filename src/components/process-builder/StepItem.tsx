@@ -44,10 +44,10 @@ export default function StepItem({ id, step, isSelected, onSelect, onDelete }: S
     }
   }
 
-  // Get form template name if available
+  
   const getFormTemplateName = async ()  => {
-    if (step.stepType === "APPROVAL" && step.formId) {
-      return await fetchStepTemplateName(step.formId)
+    if (step.stepType === "APPROVAL" && step.formTemplate?.id) {
+      return await fetchStepTemplateName(step.formTemplate.id)
     }
     return null
   }

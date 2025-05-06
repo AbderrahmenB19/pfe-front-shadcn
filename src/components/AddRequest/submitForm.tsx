@@ -1,35 +1,39 @@
-"use client"
+
 
 import { useEffect, useState } from "react"
-import { Alert } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
-import { RenderForm } from "@/components/renderForm/renderForm"
-import { formApi } from "../../apisTesting/testingApis"
-import { useSubmissionStore } from "../../store/requestStore"
-import type { FormSchemaDTO } from "../../api"
+import { formApi } from "@/apisTesting/testingApis"
+import { useSubmissionStore } from "@/store/requestStore"
+import { useDialogStateStore } from "@/store/DialogStateStore"
+
+
+import { CheckCircle2 } from "lucide-react"
+import { FormSchemaDTO } from "@/api"
+import { RenderForm } from "../renderForm/renderForm"
 
 interface SubmitFormProps {
   formSchemaId: number
-  RequestName: string
+  requestName: string
 }
 
-const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
+export default function SubmitForm({ formSchemaId, requestName }: SubmitFormProps) {
   const [jsonTemplate, setJsonTemplate] = useState<FormSchemaDTO | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<boolean>(false)
 
   const submissionRequest = useSubmissionStore((state) => state.selectedSubmission)
-  const setSelectedSubmission = useSubmissionStore((state) => state.setSelectedSubmission)
+  const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
 
   useEffect(() => {
     const fetchFormSchema = async () => {
       try {
-        console.log("id")
         const response = await formApi.getFormSchema(formSchemaId)
         setJsonTemplate(response.data)
       } catch (err) {
         console.error("Error fetching form schema:", err)
-        setError("🚫 Failed to load form. Please try again later.")
+        setError("Failed to load form. Please try again later.")
       } finally {
         setLoading(false)
       }
@@ -40,18 +44,21 @@ const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
 
   const handleSave = async () => {
     try {
-      const api =await formApi.submitForm(submissionRequest!)
-      console.log ("ur response", api)
-      setSelectedSubmission({}) 
+      await formApi.submitForm(submissionRequest!)
+      setSuccess(true)
+      // Close dialog after showing success message for 2 seconds
+      setTimeout(() => {
+        setSubmissionDialog(false)
+      }, 2000)
     } catch (err) {
-      console.log("Error submitting form:", err)
-      setError("🚫 Failed to submit form. Please try again later.")
+      console.error("Error submitting form:", err)
+      setError("Failed to submit form. Please try again later.")
     }
   }
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="p-6">
         <Skeleton className="h-6 w-1/3 mb-4" />
         <Skeleton className="h-4 w-full mb-2" />
         <Skeleton className="h-4 w-full mb-2" />
@@ -63,7 +70,7 @@ const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
 
   if (error) {
     return (
-      <div className="max-w-xl mx-auto p-6">
+      <div className="p-6">
         <Alert variant="destructive">{error}</Alert>
       </div>
     )
@@ -71,17 +78,22 @@ const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
 
   if (!jsonTemplate) {
     return (
-      <div className="max-w-xl mx-auto p-6">
-        <Alert variant="default">⚠️ No form template available</Alert>
+      <div className="p-6">
+        <Alert>No form template available</Alert>
       </div>
     )
   }
 
   return (
-    <div style={{height:"auto"}} className="max-w-3xl mx-auto px-4 py-8">
-      <h5 className="text-3xl font-bold text-primary mb-6 border-b border-primary pb-2">
-        Request: {RequestName}
-      </h5>
+    <div className="px-4 py-6">
+      <h5 className="text-2xl font-bold text-primary mb-6 border-b border-primary pb-2">Request: {requestName}</h5>
+
+      {success && (
+        <Alert className="mb-4 bg-green-50 border-green-200 text-green-800">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertDescription>Form submitted successfully!</AlertDescription>
+        </Alert>
+      )}
 
       <RenderForm
         formSchema={jsonTemplate.jsonSchema}
@@ -89,11 +101,7 @@ const SubmitForm = ({ formSchemaId, RequestName }: SubmitFormProps) => {
         error={null}
         onSubmit={handleSave}
         readOnly={false}
-        data={null}
-        successMessage="✅ Form submitted successfully!"
       />
     </div>
   )
 }
-
-export default SubmitForm
