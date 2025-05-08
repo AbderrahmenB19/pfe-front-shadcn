@@ -11,6 +11,7 @@ import {
   CloudyIcon as PendingIcon,
   PersonStandingIcon as PersonIcon,
   ViewIcon,
+  User,
 } from "lucide-react"
 import { RequestDetailsDialog } from "../RequestDialog/RequestDialog"
 import type { ProcessInstanceDTO } from "../../api"
@@ -27,19 +28,19 @@ const statusConfig: Record<
     icon: <PendingIcon className="w-4 h-4" />,
     variant: "default",
     label: "Pending",
-    color: "bg-amber-500 text-white",
+    color: "bg-yellow-100 text-yellow-800",
   },
   APPROVED: {
     icon: <ApprovedIcon className="w-4 h-4" />,
     variant: "secondary",
     label: "Approved",
-    color: "bg-emerald-500 text-white",
+    color: "bg-emerald-100 text-white",
   },
   REJECTED: {
     icon: <RejectedIcon className="w-4 h-4" />,
     variant: "destructive",
     label: "Rejected",
-    color: "bg-rose-500 text-white",
+    color: "bg-rose-100 text-white",
   },
 }
 
@@ -140,7 +141,7 @@ export const RequestTable = ({
 
   return (
     <div className="w-full p-4 space-y-6">
-      <h2 className="text-2xl font-bold text-primary border-b pb-2">{currentStatus} Requests</h2>
+      <h2 className="text-2xl font-bold text-blue-800 border-b pb-2">{currentStatus} Requests</h2>
 
       {requests.length === 0 ? (
         <div className="text-center py-12 bg-muted/30 rounded-lg border">
@@ -149,10 +150,10 @@ export const RequestTable = ({
       ) : (
         <div className="rounded-lg border overflow-x-auto shadow-sm">
           <Table>
-            <TableHeader className="bg-primary">
+            <TableHeader className="bg-black dark:bg-white">
               <TableRow>
                 {["Request #", "Requester", "Submitted", "Decision Date", "Status", "Actions"].map((header) => (
-                  <TableHead key={header} className="text-white text-center font-medium">
+                  <TableHead key={header} className="text-white dark:text-black text-center font-semibold tracking-wide">
                     {header}
                   </TableHead>
                 ))}
@@ -160,19 +161,19 @@ export const RequestTable = ({
             </TableHeader>
             <TableBody>
               {requests.map((request) => {
-                const { id, createdAt, decisionDate, status, formId } = request
+                const { id, createdAt, decisionDate, status } = request
                 const requesterName = request.requesterName
                 const reqStatus = (status as RequestStatus) || "PENDING"
                 const statusInfo = statusConfig[reqStatus]
                 const processName = request.processName
 
                 return (
-                  <TableRow key={id} className="hover:bg-muted/40 transition-colors">
+                  <TableRow key={id} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors duration-200">
                     <TableCell className="text-center font-semibold">REQ-{processName}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar className="w-8 h-8 bg-primary/10">
-                          <PersonIcon className="text-primary" />
+                          <User className="text-primary" />
                         </Avatar>
                         <span className="font-medium">{requesterName || "Unknown"}</span>
                       </div>
@@ -190,7 +191,7 @@ export const RequestTable = ({
                         variant="secondary"
                         size="sm"
                         onClick={() => handleShowDetails(request)}
-                        className="rounded-full bg-primary text-white hover:bg-primary/90 transition-colors"
+                        className="rounded-full bg-primary-100 text-blue-800 dark:bg-white dark:text-black hover:bg-blue-600 dark:hover:bg-gray-200 transition-colors duration-200"
                       >
                         <ViewIcon className="w-4 h-4 mr-2" />
                         View Details

@@ -84,10 +84,12 @@ function FormTemplatesDashboard() {
             Choose from existing templates or create your own
           </p>
         </div>
+        
       </div>
+      <hr />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {/* New Template */}
+        
         <Card
           onClick={handleOpenCreate}
           className="group flex flex-col items-center justify-center h-48 cursor-pointer hover:shadow-xl hover:border-primary transition-all duration-300"

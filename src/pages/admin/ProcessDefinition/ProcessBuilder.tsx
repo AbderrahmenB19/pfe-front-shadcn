@@ -42,7 +42,6 @@ export default function ProcessBuilder() {
 
 
   useEffect(() => {
-    console.log("holaaaaaaaaaaaaaaaaaaa")
     const fetchProcess= async()=>{
       try{
         const res = await processApi.getProcessDefinitionById(processId);
@@ -53,7 +52,6 @@ export default function ProcessBuilder() {
     }
     if (processId != 0){
       fetchProcess()
-      console.log("holaaaaaaaaaaaaaaaaaaa2222222222")
 
       
 
@@ -111,14 +109,12 @@ export default function ProcessBuilder() {
     })
   }
 
-  // Generate JSON output
   const generateJson = () => {
     const json = JSON.stringify(processDefinition, null, 2)
     setJsonOutput(json)
     return json
   }
 
-  // Import JSON
   const importJson = (json: string) => {
     try {
       const parsed = JSON.parse(json)
@@ -146,7 +142,6 @@ export default function ProcessBuilder() {
     }
   }
 
-  // Save process definition
   const saveProcessDefinition = () => {
     setIsSaving(true)
     handleSaveUpdate(processDefinition)
@@ -163,7 +158,7 @@ export default function ProcessBuilder() {
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
-            <Link to="/">
+            <Link to="/process-definition">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
@@ -178,7 +173,6 @@ export default function ProcessBuilder() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Process Definition Properties */}
         <Card className="md:col-span-12">
           <CardHeader>
             <CardTitle>Process Definition</CardTitle>
@@ -191,7 +185,6 @@ export default function ProcessBuilder() {
           </CardContent>
         </Card>
 
-        {/* Available Steps */}
         <Card className="md:col-span-3">
           <CardHeader>
             <CardTitle>Available Steps</CardTitle>
@@ -201,7 +194,6 @@ export default function ProcessBuilder() {
           </CardContent>
         </Card>
 
-        {/* Process Flow */}
         <Card className="md:col-span-9">
           <CardHeader>
             <CardTitle>Process Flow</CardTitle>
@@ -217,7 +209,6 @@ export default function ProcessBuilder() {
           </CardContent>
         </Card>
 
-        {/* Step Properties */}
         <Card className="md:col-span-12">
           <CardHeader>
             <CardTitle>{selectedStep ? `Edit Step: ${selectedStep.name}` : "Step Properties"}</CardTitle>

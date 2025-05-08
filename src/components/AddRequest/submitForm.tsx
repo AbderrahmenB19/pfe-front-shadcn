@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { formApi } from "@/apisTesting/testingApis"
 import { useSubmissionStore } from "@/store/requestStore"
 import { useDialogStateStore } from "@/store/DialogStateStore"
+import { useFormSubmissionStore } from "@/store/formSubmissionStore"
 
 
 import { CheckCircle2 } from "lucide-react"
@@ -42,19 +43,9 @@ export default function SubmitForm({ formSchemaId, requestName }: SubmitFormProp
     fetchFormSchema()
   }, [formSchemaId])
 
-  const handleSave = async () => {
-    try {
-      await formApi.submitForm(submissionRequest!)
-      setSuccess(true)
-      // Close dialog after showing success message for 2 seconds
-      setTimeout(() => {
-        setSubmissionDialog(false)
-      }, 2000)
-    } catch (err) {
-      console.error("Error submitting form:", err)
-      setError("Failed to submit form. Please try again later.")
-    }
-  }
+  //const { isSubmitting, setSubmitting, setError: setSubmissionError } = useFormSubmissionStore()
+
+  
 
   if (loading) {
     return (
@@ -99,7 +90,7 @@ export default function SubmitForm({ formSchemaId, requestName }: SubmitFormProp
         formSchema={jsonTemplate.jsonSchema}
         loading={false}
         error={null}
-        onSubmit={handleSave}
+        
         readOnly={false}
       />
     </div>

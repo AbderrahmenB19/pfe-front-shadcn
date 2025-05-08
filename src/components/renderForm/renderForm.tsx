@@ -5,12 +5,13 @@ import { AlertCircle } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useSubmissionStore } from "@/store/requestStore"
 import "formiojs/dist/formio.full.min.css"
+import { useDialogStateStore } from "@/store/DialogStateStore"
 
 interface RenderFormProps {
   formSchema: any
   loading: boolean
   error: string | null
-  onSubmit: (submission: any) => void
+  
   title?: string
   readOnly?: boolean
   data?: any
@@ -21,7 +22,7 @@ export function RenderForm({
   formSchema,
   loading,
   error,
-  onSubmit,
+  
   title,
   readOnly = false,
   data = null,
@@ -30,12 +31,16 @@ export function RenderForm({
   const parsedFormSchema = typeof formSchema === "string" ? JSON.parse(formSchema) : formSchema
   const updateFormDataSubmission = useSubmissionStore((state) => state.updateFormData)
   const saveRequest = useSubmissionStore((state) => state.submitForm)
+  const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
 
   const handleSubmit = (submission: any) => {
-    console.log(JSON.stringify(submission.data))
+    console.log("submission", submission.data)
     updateFormDataSubmission(JSON.stringify(submission.data))
     saveRequest()
-    onSubmit(submission)
+    setTimeout(() => {
+      setSubmissionDialog(false);
+    }, 1000);
+    
   }
 
   return (

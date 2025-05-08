@@ -44,11 +44,11 @@ interface RequestStore {
         
         await formApi.submitForm(selectedSubmission);
         
-        set({ selectedSubmission: null }); // Reset after submission
+        set({ selectedSubmission: null });
       } catch (error) {
         console.error("Error submitting form:", error);
         set({ error: "Failed to submit form. Please try again later." });
-        throw error; // Re-throw if you want to handle it in the component
+        throw error; 
       } finally {
         set({ isLoading: false });
       }
