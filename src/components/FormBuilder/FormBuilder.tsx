@@ -13,7 +13,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 
 interface Template {
-  id?: string
+  id?: number
   name?: string
   description?: string
   jsonSchema: string
