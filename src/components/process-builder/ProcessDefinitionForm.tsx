@@ -45,9 +45,9 @@ export default function ProcessDefinitionForm({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <Label htmlFor="process-name">Process Name</Label>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="process-name" className="font-medium">Process Name</Label>
         <Input
           id="process-name"
           value={processDefinition.name}
@@ -57,12 +57,18 @@ export default function ProcessDefinitionForm({
               name: e.target.value,
             })
           }
+          className="text-lg"
+          placeholder="e.g. Employee Onboarding Process"
         />
+        <p className="text-sm text-muted-foreground">
+          Give your process a descriptive name
+        </p>
       </div>
-      <div>
-        <Label htmlFor="form-template">Form Template</Label>
+
+      <div className="space-y-2">
+        <Label htmlFor="form-template" className="font-medium">Form Template</Label>
         <Select value={processDefinition.formTemplate?.id?.toString() || ""} onValueChange={handleFormTemplateChange}>
-          <SelectTrigger>
+          <SelectTrigger className="text-lg">
             <SelectValue placeholder="Select a form template" />
           </SelectTrigger>
           <SelectContent>
@@ -73,6 +79,9 @@ export default function ProcessDefinitionForm({
             ))}
           </SelectContent>
         </Select>
+        <p className="text-sm text-muted-foreground">
+          Select the form template this process will use
+        </p>
       </div>
     </div>
   )

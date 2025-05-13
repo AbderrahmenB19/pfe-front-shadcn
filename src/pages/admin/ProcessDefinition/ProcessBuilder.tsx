@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom"
@@ -9,10 +8,11 @@ import StepsList from "@/components/process-builder/StepsList"
 import AvailableStepsList from "@/components/process-builder/AvailableStepsList"
 import StepEditor from "@/components/process-builder/StepEditor"
 import JsonViewer from "@/components/process-builder/JsonViewer"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { processApi } from "@/apisTesting/testingApis"
 import { useProcessDefinitionStore } from "@/store/processDefinitionStore"
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary"
 
 
 
@@ -34,6 +34,7 @@ export default function ProcessBuilder() {
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null)
   const [jsonOutput, setJsonOutput] = useState("")
   const [isSaving, setIsSaving] = useState(false)
+  const [eror, setError]= useState<string|null>("");
   const navigate = useNavigate();
   const selectedNewProcessdefintion= useProcessDefinitionStore((state)=> state.selectedNewProcess)
 
@@ -42,26 +43,23 @@ export default function ProcessBuilder() {
 
 
   useEffect(() => {
-    const fetchProcess= async()=>{
-      try{
+    const fetchProcess = async () => {
+      try {
         const res = await processApi.getProcessDefinitionById(processId);
-      setProcessDefinition(res.data)
-      }catch(error){
-        console.log(error )
+        setProcessDefinition(res.data);
+        setError(null);
+      } catch (error: any) {
+        console.error('Error fetching process:', error);
+        setError(error.message || 'Failed to load process definition');
       }
+    };
+
+    if (processId !== 0) {
+      fetchProcess();
+    } else {
+      setProcessDefinition(selectedNewProcessdefintion);
     }
-    if (processId != 0){
-      fetchProcess()
-
-      
-
-    }else{
-
-    
-      setProcessDefinition(selectedNewProcessdefintion)
-      console.log(selectedNewProcessdefintion)
-    }
-  }, [])
+  }, [processId, selectedNewProcessdefintion])
 
   
   const updateProcessDefinition = (updatedProcess: ProcessDefinitionDTO) => {
@@ -109,11 +107,11 @@ export default function ProcessBuilder() {
     })
   }
 
-  const generateJson = () => {
+  // Memoize JSON output to prevent infinite renders
+  useEffect(() => {
     const json = JSON.stringify(processDefinition, null, 2)
     setJsonOutput(json)
-    return json
-  }
+  }, [processDefinition])
 
   const importJson = (json: string) => {
     try {
@@ -128,7 +126,6 @@ export default function ProcessBuilder() {
   const handleSaveUpdate = async (processDefinition: ProcessDefinitionDTO) => {
     try {
       let response;
-      console.log("----------",processDefinition)
       
       if (processDefinition.id) {
         response = await processApi.updateProcessDefinition(processDefinition);
@@ -154,30 +151,31 @@ export default function ProcessBuilder() {
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
+    <ErrorBoundary>
+      <div className="container mx-auto py-8">
+      <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
             <Link to="/process-definition">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
             {processDefinition.id ? `Edit: ${processDefinition.name}` : "New Process Definition"}
           </h1>
         </div>
-        <Button onClick={saveProcessDefinition} disabled={isSaving}>
-          <Save className="h-4 w-4 mr-2" />
-          {isSaving ? "Saving..." : "Save"}
+        <Button onClick={saveProcessDefinition} disabled={isSaving} className="gap-2">
+          <Save className="h-4 w-4" />
+          {isSaving ? "Saving..." : "Save Process"}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <Card className="md:col-span-12">
-          <CardHeader>
-            <CardTitle>Process Definition</CardTitle>
+        <Card className="md:col-span-12 shadow-sm">
+          <CardHeader className="border-b">
+            <CardTitle className="text-lg">Process Definition</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <ProcessDefinitionForm
               processDefinition={processDefinition}
               updateProcessDefinition={updateProcessDefinition}
@@ -185,20 +183,26 @@ export default function ProcessBuilder() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-3">
-          <CardHeader>
-            <CardTitle>Available Steps</CardTitle>
+        <Card className="md:col-span-3 shadow-sm">
+          <CardHeader className="border-b">
+            <CardTitle className="text-lg">Available Steps</CardTitle>
+            <CardDescription className="text-sm">
+              Drag steps to add to your process
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4">
             <AvailableStepsList onAddStep={addStep} />
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-9">
-          <CardHeader>
-            <CardTitle>Process Flow</CardTitle>
+        <Card className="md:col-span-9 shadow-sm">
+          <CardHeader className="border-b">
+            <CardTitle className="text-lg">Process Flow</CardTitle>
+            <CardDescription className="text-sm">
+              Build your process by adding and arranging steps
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <StepsList
               steps={processDefinition.steps}
               selectedStepIndex={selectedStepIndex}
@@ -228,17 +232,16 @@ export default function ProcessBuilder() {
           </CardContent>
         </Card>
 
-        {/* JSON Output */}
         <Card className="md:col-span-12">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>JSON Output</CardTitle>
             <div className="flex gap-2">
-              <Button onClick={() => generateJson()}>Generate JSON</Button>
               <JsonViewer json={jsonOutput} onImport={importJson} />
             </div>
           </CardHeader>
         </Card>
       </div>
     </div>
+    </ErrorBoundary>
   )
 }

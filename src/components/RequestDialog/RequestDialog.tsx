@@ -59,7 +59,6 @@ export const RequestDetailsDialog = ({
 
     if (open && request?.formId) {
       fetchForm()
-      // Reset states when dialog opens
       setActionResult(null)
       setActionInProgress(false)
     }
@@ -167,7 +166,7 @@ export const RequestDetailsDialog = ({
                 formSchema={formSchema.jsonSchema}
                 loading={loading}
                 error={error}
-                onSubmit={onSubmit}
+               
                 readOnly={true}
                 data={request.formData}
               />

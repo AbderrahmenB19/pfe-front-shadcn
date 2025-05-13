@@ -7,8 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { RequestTable } from "@/components/ValidaitonRequest/ValidationRequest"
 import { validatorApi } from "@/apisTesting/testingApis"
-import { CheckCircle, Clock, XCircle } from "lucide-react"
+import { CheckCircle, Clock, ShieldCheck, XCircle } from "lucide-react"
 import type { ProcessInstanceDTO } from "@/api"
+import { PageHeader } from "@/components/ui/PageHeader"
 
 const statuses = ["PENDING", "APPROVED", "REJECTED"]
 const statusIcons = { PENDING: Clock, APPROVED: CheckCircle, REJECTED: XCircle }
@@ -56,28 +57,34 @@ export default function ValidatorDashboard() {
   const StatusIcon = statusIcons[activeStatus as keyof typeof statusIcons]
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="p-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+      <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+        
           <div>
-            <h1 className="text-3xl font-bold">Validation Dashboard</h1>
-            <p className="text-muted-foreground mt-2">Manage validation requests</p>
+           <PageHeader title={"Validator"} description="Validate and approve requests" icon= {<ShieldCheck className="h-8 w-8" />} />
           </div>
         
-        </div>
+      
+        
 
       
         
-        <Card>
+        <Card className="border-0 shadow-lg">
           <CardHeader className="pb-0">
-            <div className="flex items-center gap-2">
-              <StatusIcon className={`h-5 w-5 ${
-                activeStatus === "PENDING" ? "text-amber-500" :
-                activeStatus === "APPROVED" ? "text-emerald-500" :
-                "text-rose-500"
-              }`} />
-              <CardTitle>{capitalize(activeStatus)} Requests</CardTitle>
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${
+                activeStatus === "PENDING" ? "bg-amber-100" :
+                activeStatus === "APPROVED" ? "bg-emerald-100" :
+                "bg-rose-100"
+              }`}>
+                <StatusIcon className={`h-6 w-6 ${
+                  activeStatus === "PENDING" ? "text-amber-600" :
+                  activeStatus === "APPROVED" ? "text-emerald-600" :
+                  "text-rose-600"
+                }`} />
+              </div>
+              <CardTitle className="text-xl font-semibold">{capitalize(activeStatus)} Requests</CardTitle>
             </div>
             <CardDescription>
               {activeStatus === "PENDING"
@@ -91,9 +98,13 @@ export default function ValidatorDashboard() {
           <CardContent>
             <Tabs value={activeStatus} onValueChange={(value) => setActiveStatus(value)} className="w-full">
               <div className="flex justify-end mb-4">
-                <TabsList className="bg-slate-100 grid grid-cols-3">
+                <TabsList className="bg-white shadow-sm grid grid-cols-3 gap-1 p-1 rounded-lg">
                   {statuses.map((status) => (
-                    <TabsTrigger key={status} value={status}>
+                    <TabsTrigger 
+                      key={status} 
+                      value={status}
+                      className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    >
                       {capitalize(status)}
                     </TabsTrigger>
                   ))}

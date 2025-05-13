@@ -10,6 +10,7 @@ import type { ProcessDefinitionDTO } from "@/types/process"
 import SubmitForm from "../AddRequest/submitForm"
 
 
+
 interface RequestCardProps {
   request: ProcessDefinitionDTO
   index: number
@@ -20,6 +21,7 @@ export default function RequestCard({ request, index }: RequestCardProps) {
   const updateProcessDefinitionId = useSubmissionStore((state) => state.updateProcessDefenitionId)
   const submissionDialog = useDialogStateStore((state) => state.submissionDialog)
   const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
+  const setToastState = useDialogStateStore((state) => state.setToastState)
 
   function handleOpen() {
     updateProcessDefinitionId(request.id!)
@@ -31,6 +33,7 @@ export default function RequestCard({ request, index }: RequestCardProps) {
     if (submissionDialog === false && open === true) {
       setOpen(false)
     }
+    
   }, [submissionDialog, open])
 
   return (

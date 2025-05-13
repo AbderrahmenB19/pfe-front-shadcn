@@ -4,7 +4,13 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import { Textarea } from "../ui/textarea"
-import { Upload, Save } from "lucide-react"
+import { Upload, Save, FileJson, ChevronDown } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu"
 
 interface JsonViewerProps {
   json: string
@@ -22,14 +28,30 @@ export default function JsonViewer({ json, onImport }: JsonViewerProps) {
 
   return (
     <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="gap-2">
+            <FileJson className="h-4 w-4" />
+            JSON Options
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              <Save className="h-4 w-4 mr-2" />
+              View JSON
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DropdownMenuItem onClick={() => setIsImportDialogOpen(true)}>
+            <Upload className="h-4 w-4 mr-2" />
+            Import JSON
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       {/* View JSON Dialog */}
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">
-            <Save className="h-4 w-4 mr-2" />
-            View JSON
-          </Button>
-        </DialogTrigger>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Process Definition JSON</DialogTitle>
@@ -42,12 +64,6 @@ export default function JsonViewer({ json, onImport }: JsonViewerProps) {
 
       {/* Import JSON Dialog */}
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline">
-            <Upload className="h-4 w-4 mr-2" />
-            Import JSON
-          </Button>
-        </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Import Process Definition</DialogTitle>

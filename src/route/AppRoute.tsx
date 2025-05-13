@@ -1,8 +1,9 @@
 import { useState, lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-// Lazy load components
+const Home = lazy(() => import("../pages/Home"));
 const AdminFormBuilder = lazy(() => import("../components/FormBuilder/FormBuilder"));
 const FormTemplatesDashboard = lazy(() => import("../components/FormBuilder/FormTemplate"));
 const ValidatorDashboard = lazy(() => import("../pages/validator/validationdashboard/validationPage"));
@@ -15,7 +16,13 @@ const ProcessBuilder = lazy(() => import("@/pages/admin/ProcessDefinition/Proces
 
 
 const Header = () => (
-  <div style={{ backgroundColor: "black", color: "white", height: "50px" }} className="sticky top-0 z-30 flex items-center justify-center border-b bg-background p-4 ">
+  <div className="sticky top-0 z-30 flex items-center justify-center border-b p-4"
+       style={{ 
+         background: "linear-gradient(90deg, #1a1a2e 0%, #16213e 100%)", 
+         color: "white", 
+         height: "50px",
+         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)"
+       }}>
     <h4 className="font-semibold text-center">🚀 Elevate Your Validation Experience</h4>
   </div>
 );
@@ -25,8 +32,10 @@ const Header = () => (
 const Layout = () => {
   const [collapsed, setCollapsed] = useState(false);
 
+  
+
   return (
-    <div className="flex min-h-screen w-full bg-muted/40">
+    <div className="flex min-h-screen w-full bg-gray-50">
       
       <AppSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
@@ -36,16 +45,49 @@ const Layout = () => {
       >
         <Header />
         <main className="flex-1 p-6">
-          <Routes>
-            <Route path="/form-builder" element={<AdminFormBuilder />} />
-            <Route path="/form-templates" element={<FormTemplatesDashboard />} />
-            <Route path="/process-definition" element={<Dashboard />} />
-            <Route path="/builder" element={<ProcessBuilder />} />
-            <Route path="/validator" element={<ValidatorDashboard />} />
-            <Route path="/form" element={<AvailableRequestPage />} />
-            <Route path="/processes" element={<MyRequestPage />} />
-            <Route path="/Historique" element={<ProcessDashboardPage />} />
-          </Routes>
+         
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
+              <Routes>
+                {/* Public route */}
+                <Route path="/" element={<Home />} />
+                
+                {/* Admin routes */}
+                <Route path="/form-builder" element={
+                  <ProtectedRoute element={<AdminFormBuilder />} allowedRoles={["ADMIN"]} />
+                } />
+                <Route path="/form-templates" element={
+                  <ProtectedRoute element={<FormTemplatesDashboard />} allowedRoles={["ADMIN"]} />
+                } />
+                <Route path="/process-definition" element={
+                  <ProtectedRoute element={<Dashboard />} allowedRoles={["ADMIN"]} />
+                } />
+                <Route path="/builder" element={
+                  <ProtectedRoute element={<ProcessBuilder />} allowedRoles={["ADMIN"]} />
+                } />
+                
+                {/* Validator routes */}
+                <Route path="/validator" element={
+                  <ProtectedRoute element={<ValidatorDashboard />} allowedRoles={["VALIDATOR"]} />
+                } />
+                <Route path="/Historique" element={
+                  <ProtectedRoute element={<ProcessDashboardPage />} allowedRoles={["VALIDATOR"]} />
+                } />
+                
+                {/* User routes */}
+                <Route path="/form" element={
+                  <ProtectedRoute element={<AvailableRequestPage />} allowedRoles={["USER"]} />
+                } />
+                <Route path="/processes" element={
+                  <ProtectedRoute element={<MyRequestPage />} allowedRoles={["USER"]} />
+                } />
+                
+                {/* Fallback route */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </div>
         </main>
       </div>
     </div>

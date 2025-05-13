@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import { FormBuilder as FormioFormBuilderComponent } from "@formio/react"
 import type { FormBuilder as FormioFormBuilderType } from "@formio/js"
@@ -39,7 +37,6 @@ export default function AdminFormBuilder() {
   const [feedback, setFeedback] = useState<FeedbackMessage | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Initialize form with selected template if available
   useEffect(() => {
     if (selectedTemplate?.jsonSchema) {
       try {
@@ -62,7 +59,7 @@ export default function AdminFormBuilder() {
     }
   }, [selectedTemplate])
 
-  // Clear feedback after 5 seconds for success messages
+ 
   useEffect(() => {
     if (feedback?.type === "success") {
       const timer = setTimeout(() => {
@@ -109,7 +106,6 @@ export default function AdminFormBuilder() {
         message: "Form saved successfully!",
       })
 
-      // Navigate after a short delay to allow the user to see the success message
       setTimeout(() => {
         setSelectedTemplate({})
         navigate("/form-templates")

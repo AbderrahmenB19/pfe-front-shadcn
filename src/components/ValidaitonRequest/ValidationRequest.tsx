@@ -82,7 +82,6 @@ export const RequestTable = ({
 
       setDialogOpen(false)
 
-      // Refresh the request list if callback provided
       if (onRequestUpdated) {
         onRequestUpdated()
       }
@@ -140,8 +139,17 @@ export const RequestTable = ({
   }
 
   return (
-    <div className="w-full p-4 space-y-6">
-      <h2 className="text-2xl font-bold text-blue-800 border-b pb-2">{currentStatus} Requests</h2>
+    <div className="w-full p-6 space-y-6">
+      <div className="flex items-center gap-3">
+        <div className={`p-2 rounded-lg ${
+          currentStatus === "PENDING" ? "bg-amber-100" :
+          currentStatus === "APPROVED" ? "bg-emerald-100" :
+          "bg-rose-100"
+        }`}>
+          {statusConfig[currentStatus].icon}
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900">{currentStatus} Requests</h2>
+      </div>
 
       {requests.length === 0 ? (
         <div className="text-center py-12 bg-muted/30 rounded-lg border">
@@ -150,10 +158,10 @@ export const RequestTable = ({
       ) : (
         <div className="rounded-lg border overflow-x-auto shadow-sm">
           <Table>
-            <TableHeader className="bg-black dark:bg-white">
+            <TableHeader className="bg-gray-50">
               <TableRow>
                 {["Request #", "Requester", "Submitted", "Decision Date", "Status", "Actions"].map((header) => (
-                  <TableHead key={header} className="text-white dark:text-black text-center font-semibold tracking-wide">
+                  <TableHead key={header} className="text-gray-700 text-left font-medium py-3 px-4">
                     {header}
                   </TableHead>
                 ))}
@@ -168,11 +176,11 @@ export const RequestTable = ({
                 const processName = request.processName
 
                 return (
-                  <TableRow key={id} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors duration-200">
-                    <TableCell className="text-center font-semibold">REQ-{processName}</TableCell>
-                    <TableCell>
+                  <TableRow key={id} className="hover:bg-gray-50 transition-colors duration-200 border-b">
+                    <TableCell className="font-semibold px-4 py-3">REQ-{processName}</TableCell>
+                    <TableCell className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <Avatar className="w-8 h-8 bg-primary/10">
+                        <Avatar style={{justifyContent:"center"}} className="w-8 h-8 bg-primary/10 flex items-center ">
                           <User className="text-primary" />
                         </Avatar>
                         <span className="font-medium">{requesterName || "Unknown"}</span>

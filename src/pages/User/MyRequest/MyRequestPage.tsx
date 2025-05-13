@@ -1,17 +1,13 @@
-
-
 import { useEffect, useState } from "react"
-import { Loader2, AlertTriangle } from "lucide-react"
+import { Loader2, GitPullRequestCreateIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Card, CardContent, CardHeader, CardTitle, CardDescription
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 
 import { ProcessDashboard } from "../../../components/MyRequest/MyRequest"
 import { ReportDTO } from "../../../api"
 import { processApi } from "../../../apisTesting/testingApis"
+import { PageHeader } from "@/components/ui/PageHeader"
 
 const MyRequestPage = () => {
   const [myRequests, setMyRequests] = useState<ReportDTO[]>([])
@@ -71,60 +67,86 @@ const MyRequestPage = () => {
 
   if (error || myRequests.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[70vh]">
-        <Card className="w-full max-w-md text-center p-6">
-          <CardHeader>
-            <AlertTriangle className="h-12 w-12 mx-auto text-red-500 mb-2" />
-            <CardTitle>No Processes Available</CardTitle>
-            <CardDescription>
-              {error
-                ? error
-                : "You don’t have any requests yet. Start a new one to see it listed here."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Button variant="outline" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center h-[70vh] px-4">
+        <div className="text-center space-y-6 max-w-lg w-full">
+          <div className="relative mx-auto w-24 h-24 mb-8">
+            <div className="absolute inset-0 bg-primary/10 rounded-full animate-pulse"></div>
+            <GitPullRequestCreateIcon className="w-24 h-24 text-primary/40" />
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+            {error ? "Oops!" : "No Requests Yet"}
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            {error
+              ? error
+              : "Your request history is empty. Start your journey by creating your first request."}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            {error ? (
+              <Button 
+                size="lg"
+                onClick={() => window.location.reload()}
+                className="w-full sm:w-auto"
+              >
+                Try Again
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                onClick={() => window.location.href = '/request'}
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+              >
+                Create Your First Request
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="p-6 space-y-4">
-      {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <Input
-          placeholder="Search by application type..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
-        />
-        <Select
-          value={statusFilter}
-          onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
-        >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All</SelectItem>
-            <SelectItem value="PENDING">Pending</SelectItem>
-            <SelectItem value="APPROVED">Approved</SelectItem>
-            <SelectItem value="REJECTED">Rejected</SelectItem>
-            <SelectItem value="CANCELLED">Cancelled</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6 max-w-7xl">
+      <PageHeader 
+        title="My Requests" 
+        icon={<GitPullRequestCreateIcon className="h-8 w-8 text-primary" />}
+        description="View and manage all your submitted requests"
+      />
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 shadow-sm p-6 dark:bg-gray-900/80 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="w-full md:w-1/2">
+            <Input
+              placeholder="Search by application type..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white dark:bg-gray-900"
+            />
+          </div>
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
+          >
+            <SelectTrigger className="w-full md:w-[200px] bg-white dark:bg-gray-900">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-gray-900">
+              <SelectItem value="ALL">All Requests</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="APPROVED">Approved</SelectItem>
+              <SelectItem value="REJECTED">Rejected</SelectItem>
+              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Dashboard */}
-      <ProcessDashboard
-        processes={filteredProcesses}
-        onCancelRequest={handleCancelRequest}
-        loading={loading}
-      />
+      <div className="mt-6">
+        <ProcessDashboard
+          processes={filteredProcesses}
+          onCancelRequest={handleCancelRequest}
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }

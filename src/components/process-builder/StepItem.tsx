@@ -63,11 +63,25 @@ export default function StepItem({ id, step, isSelected, onSelect, onDelete }: S
     fetchTemplate()
   }, [step])
 
+  // Get step type specific styling
+  const getStepTypeStyles = () => {
+    switch (step.stepType) {
+      case "NOTIFY":
+        return "bg-blue-50 border-blue-200 hover:bg-blue-100";
+      case "APPROVAL":
+        return "bg-green-50 border-green-200 hover:bg-green-100";
+      case "CONDITION":
+        return "bg-amber-50 border-amber-200 hover:bg-amber-100";
+      default:
+        return "bg-gray-50 border-gray-200 hover:bg-gray-100";
+    }
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`p-4 rounded-md border mb-2 ${isSelected ? "border-primary" : "border-border"}`}
+      className={`p-4 rounded-md border mb-2 transition-all duration-200 ${getStepTypeStyles()} ${isSelected ? "ring-2 ring-primary border-primary" : ""}`}
       onClick={onSelect}
     >
       <div className="flex items-center justify-between">
@@ -78,7 +92,16 @@ export default function StepItem({ id, step, isSelected, onSelect, onDelete }: S
           <div>
             <h3 className="font-medium">{step.name}</h3>
             <div className="flex gap-2 mt-1">
-              <Badge variant="outline">{step.stepType}</Badge>
+              <Badge 
+                variant="outline" 
+                className={`
+                  ${step.stepType === "NOTIFY" ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : ""}
+                  ${step.stepType === "APPROVAL" ? "bg-green-100 text-green-800 hover:bg-green-200" : ""}
+                  ${step.stepType === "CONDITION" ? "bg-amber-100 text-amber-800 hover:bg-amber-200" : ""}
+                `}
+              >
+                {step.stepType}
+              </Badge>
               {formTemplateName && <Badge variant="secondary">{formTemplateName}</Badge>}
             </div>
           </div>

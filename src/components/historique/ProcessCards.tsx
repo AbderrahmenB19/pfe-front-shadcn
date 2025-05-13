@@ -1,22 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar } from "@/components/ui/avatar";
 import {
   CheckCircle2,
   XCircle,
@@ -24,9 +12,8 @@ import {
   User,
   CalendarDays,
   Flag,
-
-  Circle as TimelineIcon,
   Eye,
+  AlarmCheckIcon,
 } from "lucide-react";
 import { CustomizedTimeline } from "../customizedTimeLine/customizedTimeline";
 import type { ReportDTO } from "../../api";
@@ -103,96 +90,114 @@ export default function ProcessCards({ processes = [], loading = false }: Proces
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i}>
-            <CardHeader>
-              <Skeleton className="h-6 w-3/4" />
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-2/3" />
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-              <Skeleton className="h-8 w-24" />
-              <Skeleton className="h-8 w-24" />
-            </CardFooter>
-          </Card>
-        ))}
+      <div className="w-full mt-6">
+        <div className="rounded-xl border overflow-hidden shadow-lg bg-white/50">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {["Request", "Requester", "Date", "Status", "Actions"].map((header) => (
+                  <TableHead key={header} className="py-4 px-6">
+                    <Skeleton className="h-4 w-24" />
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(3)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell className="px-6 py-4"><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="px-6 py-4"><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell className="px-6 py-4"><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell className="px-6 py-4"><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell className="px-6 py-4"><Skeleton className="h-8 w-32" /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full mt-6  " >
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {processes.map((process) => {
-          const statusColor =
-            statusColors[process.currentStatus as keyof typeof statusColors] ||
-            "bg-gray-100 text-gray-800";
-          const statusIcon =
-            statusIcons[process.currentStatus as keyof typeof statusIcons] || (
-              <Clock className="w-4 h-4 text-gray-500" />
-            );
+    <div className="w-full mt-6">
+      <div className="rounded-xl border overflow-x-auto shadow-lg bg-white/50 backdrop-blur-sm">
+        <Table>
+          <TableHeader className="bg-gradient-to-b from-gray-50 to-gray-100/80">
+            <TableRow className="hover:bg-transparent">
+              {["Request", "Requester", "Date", "Status", "Actions"].map((header) => (
+                <TableHead key={header} className="text-gray-700 font-semibold py-4 px-6 first:rounded-tl-xl last:rounded-tr-xl">
+                  {header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {processes.map((process) => {
+              const statusColor =
+                statusColors[process.currentStatus as keyof typeof statusColors] ||
+                "bg-gray-100 text-gray-800";
+              const statusIcon =
+                statusIcons[process.currentStatus as keyof typeof statusIcons] || (
+                  <Clock className="w-4 h-4 text-gray-500" />
+                );
 
-          return (
-            <Card
-              key={process.processInstanceId}
-              className="h-full flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg"
-            >
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <div className="flex items-center space-x-3 text-wrap">
-
-                  <Flag style={{ color: "blueviolet" }} className="w-5 h-5" />
-
-                  <CardTitle className="text-lg break-words whitespace-normal">
-                    REQ-{process.processDefinitionName}
-                  </CardTitle>
-
-                </div>
-                <Badge className={`${statusColor} flex items-center gap-1`}>
-                  {statusIcon}
-                  {process.currentStatus}
-                </Badge>
-              </CardHeader>
-              
-
-              <CardContent className="flex-1 space-y-3">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <User className="w-4 h-4 mr-2" />
-                  <span>{process.username}</span>
-                </div>
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <CalendarDays className="w-4 h-4 mr-2" />
-                  <span>
-                    Date:{" "}
+              return (
+                <TableRow key={process.processInstanceId} className="hover:bg-gray-50/50 transition-all duration-200 border-b group">
+                  <TableCell className="font-semibold px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <Flag style={{ color: "blueviolet" }} className="w-5 h-5" />
+                      <span className="bg-primary/5 px-2.5 py-1 rounded-md group-hover:bg-primary/10 transition-colors">
+                        REQ-{process.processDefinitionName}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-9 h-9 bg-primary/10 ring-2 ring-primary/5 flex items-center justify-center transition-all group-hover:ring-primary/20">
+                        <User className="text-primary w-5 h-5" />
+                      </Avatar>
+                      <span className="font-medium text-gray-700">{process.username}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-gray-600">
                     {process.startTime
                       ? new Date(process.startTime).toLocaleDateString()
                       : "--:--:--"}
-                  </span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleOpenDialog(process, "timeline")}
-                >
-                  <TimelineIcon className="w-4 h-4 mr-2" />
-                  Timeline
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleOpenDialog(process, "details")}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  Details
-                </Button>
-              </CardFooter>
-            </Card>
-          );
-        })}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <Badge className={`${statusColor} flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-all group-hover:shadow-sm`}>
+                      {statusIcon}
+                      {process.currentStatus}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <div className="flex gap-2 justify-start">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                        onClick={() => handleOpenDialog(process, "timeline")}
+                      >
+                        <AlarmCheckIcon className="w-4 h-4 mr-2" />
+                        Timeline
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                        onClick={() => handleOpenDialog(process, "details")}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Details
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -216,9 +221,7 @@ export default function ProcessCards({ processes = [], loading = false }: Proces
             )}
             {selectedProcess?.viewType === "details" && (
               <RenderForm formSchema={formSchma} loading={false} error={null} data={formData}
-              readOnly={true} onSubmit={function (submission: any): void {
-                throw new Error("Function not implemented.");
-              } }              
+              readOnly={true}               
               
               />
             )}

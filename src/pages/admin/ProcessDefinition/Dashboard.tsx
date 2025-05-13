@@ -1,8 +1,7 @@
-"use client"
 
 import { useEffect, useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Plus, Edit, Trash2, GitBranch } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -22,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { formApi, processApi } from "@/apisTesting/testingApis"
 import { FormSchemaDTO } from "@/api"
 import { useProcessDefinitionStore } from "@/store/processDefinitionStore"
+import { PageHeader } from "@/components/ui/PageHeader"
 
 
 
@@ -64,7 +64,7 @@ export default function Dashboard() {
     fetchData()
     fetchFromTemplates()
 
-  })
+  },[])
 
   // Create a new process
   const createProcess = () => {
@@ -113,8 +113,12 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto py-6">
+      <div className="mb-8 space-y-2">
+       
+        <PageHeader title="Process Dashboard" description="Manage and create your process definitions" icon = {<GitBranch className="h-8 w-8" />} />
+      </div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Process Definitions</h1>
+      
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -169,7 +173,7 @@ export default function Dashboard() {
       {/* Process Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {processDefitions.map((process) => (
-          <Card key={process.id} className="overflow-hidden">
+          <Card key={process.id} className="overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
             <CardHeader>
               <CardTitle>{process.name}</CardTitle>
               <CardDescription>

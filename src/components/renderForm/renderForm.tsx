@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useSubmissionStore } from "@/store/requestStore"
 import "formiojs/dist/formio.full.min.css"
 import { useDialogStateStore } from "@/store/DialogStateStore"
+import { Toaster, toast } from "sonner";
+
 
 interface RenderFormProps {
   formSchema: any
@@ -32,14 +34,25 @@ export function RenderForm({
   const updateFormDataSubmission = useSubmissionStore((state) => state.updateFormData)
   const saveRequest = useSubmissionStore((state) => state.submitForm)
   const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
+  const setToastState = useDialogStateStore((state) => state.setToastState)
 
   const handleSubmit = (submission: any) => {
     console.log("submission", submission.data)
     updateFormDataSubmission(JSON.stringify(submission.data))
-    saveRequest()
-    setTimeout(() => {
+    saveRequest().then(() => {
       setSubmissionDialog(false);
-    }, 1000);
+      setToastState({
+        open: true,message: "Form submitted successfully", status: "success"
+      })
+    }).catch((error) => {
+      setToastState({
+        open: true,message: "Error submitting form: "+error ,status: "error"
+      })
+    });
+    
+    
+      
+    
     
   }
 

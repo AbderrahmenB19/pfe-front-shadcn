@@ -32,12 +32,25 @@ export default function AvailableStepsList({ onAddStep }: AvailableStepsListProp
       {availableSteps.map((step, index) => (
         <div
           key={`available-${index}`}
-          className="p-3 bg-secondary rounded-md mb-2 cursor-pointer hover:bg-secondary/80 transition-colors"
+          className={`
+            p-3 rounded-md mb-2 cursor-pointer transition-colors
+            ${step.stepType === "NOTIFY" ? "bg-blue-50 border border-blue-200 hover:bg-blue-100" : ""}
+            ${step.stepType === "APPROVAL" ? "bg-green-50 border border-green-200 hover:bg-green-100" : ""}
+            ${step.stepType === "CONDITION" ? "bg-amber-50 border border-amber-200 hover:bg-amber-100" : ""}
+          `}
           onClick={() => onAddStep(step)}
         >
           <div className="flex items-center justify-between">
-            <span>{step.name}</span>
-            <Badge>{step.stepType}</Badge>
+            <span className="font-medium">{step.name}</span>
+            <Badge
+              className={`
+                ${step.stepType === "NOTIFY" ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : ""}
+                ${step.stepType === "APPROVAL" ? "bg-green-100 text-green-800 hover:bg-green-200" : ""}
+                ${step.stepType === "CONDITION" ? "bg-amber-100 text-amber-800 hover:bg-amber-200" : ""}
+              `}
+            >
+              {step.stepType}
+            </Badge>
           </div>
         </div>
       ))}

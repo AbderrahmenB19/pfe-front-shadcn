@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import {  SubmissionDTO } from '../api';
 import { formApi } from '../apisTesting/testingApis';
+import { useDialogStateStore } from './DialogStateStore';
 
 
 interface RequestStore {
@@ -34,6 +35,7 @@ interface RequestStore {
     })),
     
     submitForm: async () => {
+      
       try {
         set({ isLoading: true, error: null });
         const { selectedSubmission } = get();
@@ -43,10 +45,15 @@ interface RequestStore {
         }
         
         await formApi.submitForm(selectedSubmission);
+       
+        
+
+        
         
         set({ selectedSubmission: null });
       } catch (error) {
         console.error("Error submitting form:", error);
+           
         set({ error: "Failed to submit form. Please try again later." });
         throw error; 
       } finally {

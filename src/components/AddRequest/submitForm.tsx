@@ -24,8 +24,7 @@ export default function SubmitForm({ formSchemaId, requestName }: SubmitFormProp
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<boolean>(false)
 
-  const submissionRequest = useSubmissionStore((state) => state.selectedSubmission)
-  const setSubmissionDialog = useDialogStateStore((state) => state.setSubmissionDialog)
+  
 
   useEffect(() => {
     const fetchFormSchema = async () => {
