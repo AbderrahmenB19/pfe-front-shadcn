@@ -6,9 +6,9 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { RequestTable } from "@/components/ValidaitonRequest/ValidationRequest"
-import { validatorApi } from "@/apisTesting/testingApis"
+import { validatorApi } from "@/api/testingApis"
 import { CheckCircle, Clock, ShieldCheck, XCircle } from "lucide-react"
-import type { ProcessInstanceDTO } from "@/api"
+import type { ProcessInstanceDTO } from "@/Models"
 import { PageHeader } from "@/components/ui/PageHeader"
 
 const statuses = ["PENDING", "APPROVED", "REJECTED"]

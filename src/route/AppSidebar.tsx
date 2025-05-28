@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Folder, LogOut, FileText, GitBranch, ShieldCheck, FileStack, History, ArrowLeft, Home } from "lucide-react";
+import { Folder, LogOut, FileText, GitBranch, ShieldCheck, FileStack, History, ArrowLeft, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { doLogout } from "@/auth/KeycloakService";
-import { useAuthStore } from "@/store/authStore";
 import { hasRole } from "@/utils/roleUtils";
 
 export function AppSidebar({ collapsed, setCollapsed }: { collapsed: boolean; setCollapsed: (collapsed: boolean) => void; }) {
-  const { roles } = useAuthStore();
   return (
     <div className={`fixed top-0 left-0 h-screen text-white p-4 flex flex-col ${collapsed ? 'w-20' : 'w-64'} transition-all duration-300 z-50`}
          style={{
@@ -30,19 +28,20 @@ export function AppSidebar({ collapsed, setCollapsed }: { collapsed: boolean; se
         </Button>
       </div>
 
-      {/* Sidebar Items */}
+      
       <nav className="flex-1 flex flex-col gap-4 overflow-y-auto">
-        <SidebarItem to="/" Icon={Home} label="Home" collapsed={collapsed} />
         
-        {/* Admin Routes */}
+        
         {hasRole(["ADMIN"]) && (
           <>
             <SidebarItem to="/form-templates" Icon={FileText} label="Form Templates" collapsed={collapsed} />
             <SidebarItem to="/process-definition" Icon={GitBranch} label="Process Definition" collapsed={collapsed} />
+            <SidebarItem to="/Historique" Icon={History} label="Process History" collapsed={collapsed} />
+            <SidebarItem to="http://localhost:9090/" Icon={Settings} label="Manage users" collapsed={collapsed} />
           </>
         )}
         
-        {/* Validator Routes */}
+        
         {hasRole(["VALIDATOR"]) && (
           <>
             <SidebarItem to="/validator" Icon={ShieldCheck} label="Validator Dashboard" collapsed={collapsed} />
@@ -50,7 +49,7 @@ export function AppSidebar({ collapsed, setCollapsed }: { collapsed: boolean; se
           </>
         )}
         
-        {/* User Routes */}
+        
         {hasRole(["USER"]) && (
           <>
             <SidebarItem to="/form" Icon={Folder} label="Available Forms" collapsed={collapsed} />
@@ -59,7 +58,7 @@ export function AppSidebar({ collapsed, setCollapsed }: { collapsed: boolean; se
         )}
       </nav>
 
-      {/* Logout Button */}
+      
       <div className="mt-auto border-t border-indigo-900/50 pt-4">
         <button onClick={()=> {doLogout()}} className="w-full">
           <SidebarItem to="/logout" Icon={LogOut} label="Logout" collapsed={collapsed} />

@@ -20,7 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Collapse from "@mui/material/Collapse";
-import { ProcessHistoryDTO } from "../../api";
+import { ProcessHistoryDTO } from "../../Models";
 
 
 const statusStyles = {

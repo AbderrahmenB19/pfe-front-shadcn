@@ -4,8 +4,8 @@ import type { FormTemplateDTO, ProcessDefinitionDTO } from "../../types/process"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import { FormSchemaDTO } from "@/api"
-import { formApi } from "@/apisTesting/testingApis"
+import { FormSchemaDTO } from "@/Models"
+import { formApi } from "@/api/testingApis"
 
 
 interface ProcessDefinitionFormProps {

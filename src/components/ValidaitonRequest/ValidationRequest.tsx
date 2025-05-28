@@ -14,8 +14,8 @@ import {
   User,
 } from "lucide-react"
 import { RequestDetailsDialog } from "../RequestDialog/RequestDialog"
-import type { ProcessInstanceDTO } from "../../api"
-import { validatorApi } from "@/apisTesting/testingApis"
+import type { ProcessInstanceDTO } from "../../Models"
+import { validatorApi } from "@/api/testingApis"
 import { useToast } from "@/hooks/use-toast"
 
 type RequestStatus = "PENDING" | "APPROVED" | "REJECTED"

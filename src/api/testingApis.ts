@@ -7,7 +7,7 @@ import {
   
   ReportDTO,
   SubmissionDTO
-} from '../api'; // Assuming you have these types exported from your OpenAPI definitions
+} from '../Models'; // Assuming you have these types exported from your OpenAPI definitions
 import { ProcessDefinitionDTO } from '@/types/process';
 
 // Create axios instance with base configuration
@@ -43,11 +43,7 @@ export const formApi = {
   saveFormSchema: (data: FormSchemaDTO): Promise<AxiosResponse<string>> => 
     apiClient.post('/form/form-schema', data),
 
-  /**
-   * Update an existing form schema
-   * @param data FormSchemaDTO to update
-   * @returns Promise with success message
-   */
+ 
   updateFormSchema: (data: FormSchemaDTO): Promise<AxiosResponse<string>> => 
     apiClient.put('/form/form-schema', data),
   
@@ -55,22 +51,14 @@ export const formApi = {
   deleteFormSchemaById: (id: number): Promise<AxiosResponse<string>> => 
     apiClient.delete(`/form/form-schema/${id}`),
 
-  /**
-   * Submit a form
-   * @param data SubmissionDTO with form data
-   * @returns Promise with success message
-   */
+ 
   submitForm: (data: SubmissionDTO): Promise<AxiosResponse<string>> => 
     apiClient.post('/form', data),
 };
 
 // Process API
 export const processApi = {
-  /**
-   * Cancel a process request
-   * @param id Process instance ID
-   * @returns Promise with success message
-   */
+
   cancelRequest: (id: number): Promise<AxiosResponse<string>> => 
     apiClient.patch(`/processes/cancel-request/${id}`),
 
@@ -182,6 +170,8 @@ apiClient.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+export const rolesApi =   (): Promise<AxiosResponse<Array<string>>> => 
+  apiClient.get(`/roles`)
 
 apiClient.interceptors.response.use(
   (response) => response,

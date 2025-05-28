@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "../ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Textarea } from "../ui/textarea"
 import { Upload, Save, FileJson, ChevronDown } from "lucide-react"
 import {
@@ -20,6 +20,7 @@ interface JsonViewerProps {
 export default function JsonViewer({ json, onImport }: JsonViewerProps) {
   const [importJson, setImportJson] = useState("")
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false)
+  const [viewJsonDialogOpen, setViewJsonDialogOpen] = useState(false)
 
   const handleImport = () => {
     onImport(importJson)
@@ -37,12 +38,10 @@ export default function JsonViewer({ json, onImport }: JsonViewerProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DialogTrigger asChild>
-            <DropdownMenuItem>
-              <Save className="h-4 w-4 mr-2" />
-              View JSON
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <DropdownMenuItem onClick={() => setViewJsonDialogOpen(true)}>
+            <Save className="h-4 w-4 mr-2" />
+            View JSON
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsImportDialogOpen(true)}>
             <Upload className="h-4 w-4 mr-2" />
             Import JSON
@@ -51,7 +50,7 @@ export default function JsonViewer({ json, onImport }: JsonViewerProps) {
       </DropdownMenu>
 
       {/* View JSON Dialog */}
-      <Dialog>
+      <Dialog open={viewJsonDialogOpen} onOpenChange={setViewJsonDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Process Definition JSON</DialogTitle>

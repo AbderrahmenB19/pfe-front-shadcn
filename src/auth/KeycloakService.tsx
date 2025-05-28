@@ -1,4 +1,3 @@
-// src/KeycloakService.ts
 import Keycloak from 'keycloak-js';
 import { useAuthStore } from '../store/authStore';
 import { extractRolesFromToken } from '@/utils/tokenUtils';
@@ -20,11 +19,9 @@ const initKeycloak = () =>
           console.log('token:', keycloak.token);
           localStorage.setItem('refreshToken', keycloak.refreshToken!);
 
-          // Extract roles from token
           const roles = extractRolesFromToken(keycloak.token!);
           console.log('User roles:', roles);
           
-          // Store token and roles in Zustand store
           useAuthStore.getState().setToken(keycloak.token!);
           useAuthStore.getState().setRoles(roles);
           resolve();

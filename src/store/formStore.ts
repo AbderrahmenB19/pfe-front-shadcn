@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormSchemaDTO } from '../api';
+import { FormSchemaDTO } from '../Models';
 
 interface FormStore {
   selectedForm: FormSchemaDTO | null;

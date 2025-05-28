@@ -32,3 +32,6 @@ initKeycloak()
     fallback.style.textAlign = 'center';
     document.body.appendChild(fallback);
   });
+
+
+  

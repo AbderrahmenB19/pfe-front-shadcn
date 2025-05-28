@@ -27,7 +27,7 @@ import {
   Eye,
   Trash2,
 } from "lucide-react"
-import type { ReportDTO } from "../../api"
+import type { ReportDTO } from "../../Models"
 import { CustomizedTimeline } from "../customizedTimeLine/customizedTimeline"
 import { Avatar } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"

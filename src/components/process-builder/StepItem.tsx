@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { GripVertical, Trash2, ChevronRight } from "lucide-react"
 import type { ProcessStepDTO, ConditionDTO } from "../../types/process"
-import { formApi } from "@/apisTesting/testingApis"
+import { formApi } from "@/api/testingApis"
 
 import React from "react"
 

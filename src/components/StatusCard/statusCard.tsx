@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Clock, XCircle, ListChecks } from "lucide-react"; 
-import type { ReportDTO } from "../../api";
+import type { ReportDTO } from "../../Models";
 
 export const StatusCards = ({ processes }: { processes: ReportDTO[] }) => {
   const cardData = [

@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 
 import { ProcessDashboard } from "../../../components/MyRequest/MyRequest"
-import { ReportDTO } from "../../../api"
-import { processApi } from "../../../apisTesting/testingApis"
+import { ReportDTO } from "../../../Models"
+import { processApi } from "../../../api/testingApis"
 import { PageHeader } from "@/components/ui/PageHeader"
 
 const MyRequestPage = () => {

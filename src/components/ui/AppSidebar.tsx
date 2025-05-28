@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Inbox, Search, Settings } from "lucide-react"
 import { Link } from "react-router-dom" // <-- Important for SPA navigation
 
 import {
@@ -17,7 +17,7 @@ const items = [
   {
     title: "Form Builder",
     url: "/form-builder",
-    icon: Home, // you can choose better icons if you want
+    icon: Calendar, // replaced Home icon with Calendar
   },
   {
     title: "Form Templates",

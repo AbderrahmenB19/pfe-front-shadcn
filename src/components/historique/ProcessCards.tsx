@@ -16,9 +16,9 @@ import {
   AlarmCheckIcon,
 } from "lucide-react";
 import { CustomizedTimeline } from "../customizedTimeLine/customizedTimeline";
-import type { ReportDTO } from "../../api";
+import type { ReportDTO } from "../../Models";
 import { RenderForm } from "../renderForm/renderForm";
-import { formApi, processApi } from "@/apisTesting/testingApis";
+import { formApi, processApi } from "@/api/testingApis";
 
 
 interface ProcessCardsProps {

@@ -1,5 +1,3 @@
-"use client"
-
 import type { ProcessStepDTO } from "../../types/process"
 import ApprovalStepEditor from "./step-editors/ApprovalStepEditor"
 import NotifyStepEditor from "./step-editors/NotifyStepEditor"
@@ -15,12 +13,9 @@ interface StepEditorProps {
 }
 
 export default function StepEditor({ step, allSteps, onUpdateStep }: StepEditorProps) {
-  // Update basic step properties
   const updateBasicProperties = (name: string, stepType: "NOTIFY" | "APPROVAL" | "CONDITION") => {
-    // Create a new step object based on the type
     let updatedStep: any = { ...step, name, stepType }
 
-    // Add type-specific properties if changing type
     if (stepType !== step.stepType) {
       if (stepType === "APPROVAL") {
         updatedStep = {
@@ -50,7 +45,6 @@ export default function StepEditor({ step, allSteps, onUpdateStep }: StepEditorP
 
   return (
     <div className="space-y-6">
-      {/* Basic properties for all step types */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="step-name">Step Name</Label>

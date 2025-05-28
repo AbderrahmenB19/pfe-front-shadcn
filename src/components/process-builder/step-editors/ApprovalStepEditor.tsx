@@ -6,9 +6,9 @@ import { Label } from "../../ui/label"
 import { Button } from "../../ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
 import { PlusCircle, Trash2 } from "lucide-react"
-import { FormSchemaDTO } from "@/api"
+import { FormSchemaDTO } from "@/Models"
 
-import { formApi } from "@/apisTesting/testingApis"
+import { formApi, rolesApi } from "@/api/testingApis"
 
 
 
@@ -21,7 +21,17 @@ interface ApprovalStepEditorProps {
 export default function ApprovalStepEditor({ step, onUpdateStep }: ApprovalStepEditorProps) {
   const [newRole, setNewRole] = useState("")
   const [formTemplates, setFormTemplates]= useState<FormSchemaDTO[]>([])
+  const [Roles , setRoles] = useState<string[]>([])
   useEffect(()=>{
+    const fetchAvaibleRoles= async ()=>{
+      try{
+        const response = await rolesApi();
+        setRoles(response.data)
+         
+      }catch(eror){
+        console.log(eror)
+      }
+    }
     const fetchTemplates= async ()=>{
       try{
         const response = await formApi.getAllFormSchemas()
@@ -31,20 +41,21 @@ export default function ApprovalStepEditor({ step, onUpdateStep }: ApprovalStepE
       }
     }
     fetchTemplates()
+    fetchAvaibleRoles()
   },[])
 
-  // Add a validator role
   const addValidatorRole = () => {
-    if (!newRole.trim()) return
+    if (!newRole) return
 
+    if (step.validatorRoles.includes(newRole)) return
+    
     onUpdateStep({
       ...step,
-      validatorRoles: [...step.validatorRoles, newRole.trim()],
+      validatorRoles: [...step.validatorRoles, newRole],
     })
     setNewRole("")
   }
 
-  // Remove a validator role
   const removeValidatorRole = (index: number) => {
     const updatedRoles = [...step.validatorRoles]
     updatedRoles.splice(index, 1)
@@ -115,17 +126,21 @@ export default function ApprovalStepEditor({ step, onUpdateStep }: ApprovalStepE
       <div className="space-y-4">
         <Label>Validator Roles</Label>
         <div className="flex gap-2">
-          <Input
-            placeholder="Add validator role"
+          <Select
             value={newRole}
-            onChange={(e) => setNewRole(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault()
-                addValidatorRole()
-              }
-            }}
-          />
+            onValueChange={setNewRole}
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="Select a role" />
+            </SelectTrigger>
+            <SelectContent>
+              {Roles.map((role) => (
+                <SelectItem key={role} value={role}>
+                  {role}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button onClick={addValidatorRole}>
             <PlusCircle className="h-4 w-4 mr-2" />
             Add

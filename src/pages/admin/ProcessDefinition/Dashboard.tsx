@@ -18,8 +18,8 @@ import { Label } from "@/components/ui/label"
 import type { FormTemplateDTO, ProcessDefinitionDTO } from "@/types/process"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { formApi, processApi } from "@/apisTesting/testingApis"
-import { FormSchemaDTO } from "@/api"
+import { formApi, processApi } from "@/api/testingApis"
+import { FormSchemaDTO } from "@/Models"
 import { useProcessDefinitionStore } from "@/store/processDefinitionStore"
 import { PageHeader } from "@/components/ui/PageHeader"
 

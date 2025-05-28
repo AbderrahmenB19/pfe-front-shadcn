@@ -2,8 +2,22 @@ import { useState, lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AppSidebar } from "./AppSidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { useAuthStore } from "@/store/authStore";
+import { hasRole } from "@/utils/roleUtils";
 
-const Home = lazy(() => import("../pages/Home"));
+const DefaultRedirect = () => {
+  const { roles } = useAuthStore();
+  
+  if (hasRole(["ADMIN"])) {
+    return <Navigate to="/process-definition" replace />;
+  } else if (hasRole(["VALIDATOR"])) {
+    return <Navigate to="/validator" replace />;
+  } else if (hasRole(["USER"])) {
+    return <Navigate to="/form" replace />;
+  } else {
+    return <Navigate to="/logout" replace />;
+  }
+};
 const AdminFormBuilder = lazy(() => import("../components/FormBuilder/FormBuilder"));
 const FormTemplatesDashboard = lazy(() => import("../components/FormBuilder/FormTemplate"));
 const ValidatorDashboard = lazy(() => import("../pages/validator/validationdashboard/validationPage"));
@@ -50,10 +64,8 @@ const Layout = () => {
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
             <Suspense fallback={<div className="flex items-center justify-center h-64">Loading...</div>}>
               <Routes>
-                {/* Public route */}
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<DefaultRedirect />} />
                 
-                {/* Admin routes */}
                 <Route path="/form-builder" element={
                   <ProtectedRoute element={<AdminFormBuilder />} allowedRoles={["ADMIN"]} />
                 } />
@@ -67,15 +79,13 @@ const Layout = () => {
                   <ProtectedRoute element={<ProcessBuilder />} allowedRoles={["ADMIN"]} />
                 } />
                 
-                {/* Validator routes */}
                 <Route path="/validator" element={
                   <ProtectedRoute element={<ValidatorDashboard />} allowedRoles={["VALIDATOR"]} />
                 } />
                 <Route path="/Historique" element={
-                  <ProtectedRoute element={<ProcessDashboardPage />} allowedRoles={["VALIDATOR"]} />
+                  <ProtectedRoute element={<ProcessDashboardPage />} allowedRoles={["VALIDATOR","ADMIN"]} />
                 } />
                 
-                {/* User routes */}
                 <Route path="/form" element={
                   <ProtectedRoute element={<AvailableRequestPage />} allowedRoles={["USER"]} />
                 } />
@@ -83,7 +93,6 @@ const Layout = () => {
                   <ProtectedRoute element={<MyRequestPage />} allowedRoles={["USER"]} />
                 } />
                 
-                {/* Fallback route */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
