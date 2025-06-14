@@ -80,31 +80,86 @@ export default function ApprovalStepEditor({ step, onUpdateStep }: ApprovalStepE
     })
   }
 
+  // Handle approval requirement change
+  const handleApprovalChange = (value: string) => {
+    if (value === "NUMBER") {
+      // When NUMBER is selected, default to 1 or current value if it's already a number
+      const currentValue = step.requiredApproval;
+      const initialValue = currentValue !== "ANY" && currentValue !== "ALL" && currentValue !== "NUMBER" ? 
+        currentValue : "1";
+      
+      onUpdateStep({
+        ...step,
+        requiredApproval: initialValue,
+      })
+    } else {
+      onUpdateStep({
+        ...step,
+        requiredApproval: value,
+      })
+    }
+  }
+  
+  // Handle custom number input for required approvals
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const numValue = parseInt(value);
+    
+    // Validate that the number is positive and not greater than the number of roles
+    if (numValue > 0 && numValue <= step.validatorRoles.length) {
+      onUpdateStep({
+        ...step,
+        requiredApproval: value,
+      })
+    } else if (value === "") {
+      // Allow empty input temporarily while typing
+      onUpdateStep({
+        ...step,
+        requiredApproval: "1", // Default to 1 if empty
+      })
+    } else {
+      alert(`The number of required approvals must be between 1 and ${step.validatorRoles.length}!`)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="required-approval">Required Approval</Label>
-          <Select
-            value={step.requiredApproval}
-            onValueChange={(value) =>
-              onUpdateStep({
-                ...step,
-                requiredApproval: value,
-              })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select approval type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ANY">ANY</SelectItem>
-              <SelectItem value="ALL">ALL</SelectItem>
-              <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem>
-              <SelectItem value="3">3</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Select
+              value={step.requiredApproval === "ANY" || step.requiredApproval === "ALL" || step.requiredApproval === "NUMBER" ? 
+                step.requiredApproval : "NUMBER"}
+              onValueChange={handleApprovalChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select approval type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ANY">ANY</SelectItem>
+                <SelectItem value="ALL">ALL</SelectItem>
+                <SelectItem value="NUMBER">NUMBER</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            {/* Show number input when NUMBER is selected */}
+            {step.requiredApproval !== "ANY" && step.requiredApproval !== "ALL" && step.requiredApproval !== "NUMBER" && (
+              <div className="flex items-center gap-2">
+                <Input 
+                  type="number" 
+                  min={1} 
+                  max={step.validatorRoles.length || 1}
+                  value={step.requiredApproval} 
+                  onChange={handleNumberChange}
+                  className="w-24"
+                />
+                <span className="text-sm text-muted-foreground">
+                  of {step.validatorRoles.length} role{step.validatorRoles.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
         <div>
           <Label htmlFor="form-template">Form Template</Label>
@@ -149,7 +204,7 @@ export default function ApprovalStepEditor({ step, onUpdateStep }: ApprovalStepE
 
         <div className="space-y-2">
           {step.validatorRoles.map((role, index) => (
-            <div key={index} className="flex items-center justify-between p-2 bg-secondary rounded-md">
+            <div key={index} className="flex items-center justify-between p-2 bg-blue-100 dark:bg-blue-900/30 rounded-md">
               <span>{role}</span>
               <Button variant="ghost" size="icon" onClick={() => removeValidatorRole(index)}>
                 <Trash2 className="h-4 w-4" />

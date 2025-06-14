@@ -6,6 +6,7 @@ export interface ConditionDTO {
 export interface FormTemplateDTO {
   id: number
   name: string
+  jsonSchema?: string
 }
 
 export interface BaseStepDTO {

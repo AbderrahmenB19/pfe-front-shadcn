@@ -77,7 +77,11 @@ interface CustomizedTimelineProps {
   timelineData: ProcessHistoryDTO[];
 }
 
- export const CustomizedTimeline: React.FC<CustomizedTimelineProps> = ({ timelineData }) => {
+ export const CustomizedTimeline: React.FC<CustomizedTimelineProps> = React.memo(({ timelineData }) => {
+  const uniqueTimelineData = timelineData.filter((item, index, arr) => {
+    if (index === 0) return true;
+    return item.action !== arr[index - 1].action;
+  });
   const theme = useTheme();
   const [expandedItems, setExpandedItems] = React.useState<Record<number, boolean>>({});
 
@@ -122,7 +126,8 @@ interface CustomizedTimelineProps {
       </Typography>
 
       <StyledTimeline style={{ maxHeight:"400px" ,overflowX:"scroll" , gap:"20px"}}>
-        {timelineData.map((item, index) => {
+        {uniqueTimelineData.map((item, index) => {
+
           const status = item.actionStatus
           ? statusStyles[item.actionStatus as keyof typeof statusStyles] || statusStyles.NOT_STARTED
           : statusStyles.NOT_STARTED;
@@ -141,7 +146,7 @@ interface CustomizedTimelineProps {
                     color: status.color
                   })}
                 </TimelineDot>
-                {index !== timelineData.length - 1 && (
+                {index !== uniqueTimelineData.length - 1 && (
                   <TimelineConnector sx={{
                     backgroundColor: theme.palette.grey[300],
                     width: '2px'
@@ -158,7 +163,9 @@ interface CustomizedTimelineProps {
                   <Box>
                     <Typography variant="subtitle1" sx={{
                       fontWeight: 600,
-                      color: theme.palette.text.primary
+                      color: theme.palette.text.primary,
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word'
                     }}>
                       {item.action}
                     </Typography>
@@ -169,8 +176,7 @@ interface CustomizedTimelineProps {
                       gap: 0.5,
                       mt: 0.5
                     }}>
-                      <PersonIcon fontSize="inherit" />
-                      {item.action || "System"}
+                      
                     </Typography>
                   </Box>
                   <Typography variant="caption" sx={{
@@ -244,5 +250,5 @@ interface CustomizedTimelineProps {
       </StyledTimeline>
     </Paper>
   );
-};
+});
 

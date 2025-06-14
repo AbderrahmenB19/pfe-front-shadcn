@@ -33,10 +33,12 @@ export default function ProcessDefinitionForm({
   const handleFormTemplateChange = (templateId: string) => {
     const selectedTemplate = formTemplates.find((template) => template.id === Number.parseInt(templateId))
     const temp :FormTemplateDTO ={
-      id: selectedTemplate?.id! ,
-      name: selectedTemplate?.name!
-
+      id: selectedTemplate?.id!,
+      name: selectedTemplate?.name!,
+     
     }
+    
+
 
     updateProcessDefinition({
       ...processDefinition,

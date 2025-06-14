@@ -111,11 +111,17 @@ export default function ProcessBuilder() {
   const importJson = (json: string) => {
     try {
       const parsed = JSON.parse(json)
+      
+      if (!parsed.name || !Array.isArray(parsed.steps)) {
+        alert("Invalid process definition format. JSON must include 'name' and 'steps' properties.")
+        return
+      }
+      
       setProcessDefinition(parsed)
       setSelectedStepIndex(null)
     } catch (error) {
       console.error("Failed to parse JSON:", error)
-      alert("Invalid JSON format")
+      alert("Invalid JSON format. Please check your JSON syntax and try again.")
     }
   }
   const handleSaveUpdate = async (processDefinition: ProcessDefinitionDTO) => {
@@ -218,6 +224,7 @@ export default function ProcessBuilder() {
                 step={selectedStep}
                 allSteps={processDefinition.steps}
                 onUpdateStep={(updatedStep) => updateStep(updatedStep, selectedStepIndex)}
+                processDefinition={processDefinition}
               />
             ) : (
               <div className="flex items-center justify-center h-[200px]">

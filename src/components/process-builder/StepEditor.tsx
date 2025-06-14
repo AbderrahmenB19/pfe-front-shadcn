@@ -1,4 +1,4 @@
-import type { ProcessStepDTO } from "../../types/process"
+import type { ProcessStepDTO, ProcessDefinitionDTO } from "../../types/process"
 import ApprovalStepEditor from "./step-editors/ApprovalStepEditor"
 import NotifyStepEditor from "./step-editors/NotifyStepEditor"
 import ConditionStepEditor from "./step-editors/ConditionStepEditor"
@@ -10,9 +10,10 @@ interface StepEditorProps {
   step: ProcessStepDTO
   allSteps: ProcessStepDTO[]
   onUpdateStep: (updatedStep: ProcessStepDTO) => void
+  processDefinition: ProcessDefinitionDTO
 }
 
-export default function StepEditor({ step, allSteps, onUpdateStep }: StepEditorProps) {
+export default function StepEditor({ step, allSteps, onUpdateStep, processDefinition }: StepEditorProps) {
   const updateBasicProperties = (name: string, stepType: "NOTIFY" | "APPROVAL" | "CONDITION") => {
     let updatedStep: any = { ...step, name, stepType }
 
@@ -78,7 +79,12 @@ export default function StepEditor({ step, allSteps, onUpdateStep }: StepEditorP
       {step.stepType === "NOTIFY" && <NotifyStepEditor step={step} onUpdateStep={onUpdateStep} />}
 
       {step.stepType === "CONDITION" && (
-        <ConditionStepEditor step={step} allSteps={allSteps} onUpdateStep={onUpdateStep} />
+        <ConditionStepEditor 
+          step={step} 
+          allSteps={allSteps} 
+          onUpdateStep={onUpdateStep} 
+          processDefinition={processDefinition}
+        />
       )}
     </div>
   )

@@ -16,7 +16,6 @@ interface NotifyStepEditorProps {
 export default function NotifyStepEditor({ step, onUpdateStep }: NotifyStepEditorProps) {
   const [newRecipient, setNewRecipient] = useState("")
 
-  // Add a recipient
   const addRecipient = () => {
     if (!newRecipient.trim()) return
 
@@ -27,8 +26,7 @@ export default function NotifyStepEditor({ step, onUpdateStep }: NotifyStepEdito
     setNewRecipient("")
   }
 
-  // Remove a recipient
-  const removeRecipient = (index: number) => {
+    const removeRecipient = (index: number) => {
     const updatedRecipients = [...step.recipients]
     updatedRecipients.splice(index, 1)
 
@@ -62,7 +60,7 @@ export default function NotifyStepEditor({ step, onUpdateStep }: NotifyStepEdito
 
         <div className="space-y-2">
           {step.recipients.map((email, index) => (
-            <div key={index} className="flex items-center justify-between p-2 bg-secondary rounded-md">
+            <div key={email} className="flex items-center justify-between p-2 bg-secondary rounded-md">
               <span>{email}</span>
               <Button variant="ghost" size="icon" onClick={() => removeRecipient(index)}>
                 <Trash2 className="h-4 w-4" />
